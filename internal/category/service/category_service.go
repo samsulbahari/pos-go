@@ -80,12 +80,12 @@ func (cs *CategoryService) CreateData(ctx *gin.Context, category *domain.MCatego
 	if err != nil {
 		return 500, errors.New("Service upload image error")
 	}
-
+	category.Image = resp.SecureURL
 	_, err = cs.categoryRepo.CreateData(category)
 	if err != nil {
 		return 500, errors.New("Insert to database error")
 	}
-	category.Image = resp.SecureURL
+
 	return 200, nil
 }
 func (cs *CategoryService) DeleteData(ctx *gin.Context) (int, error) {
