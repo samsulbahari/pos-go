@@ -53,7 +53,7 @@ func (cs *CategoryService) GetData(page int) (domain.ResultCategory, error) {
 func (cs *CategoryService) GetDataById(id int) (domain.MCategory, error) {
 	res, err := cs.categoryRepo.GetDataById(id)
 	if err != nil {
-		return domain.MCategory{}, errors.New("Data not found")
+		return domain.MCategory{}, domain.ErrNotFound
 	}
 	return res, nil
 }
@@ -78,12 +78,12 @@ func (cs *CategoryService) CreateData(ctx *gin.Context, category *domain.MCatego
 		Folder:   "pos"})
 
 	if err != nil {
-		return 500, errors.New("Service upload image error")
+		return 500, domain.ErrInternalServerError
 	}
 	category.Image = resp.SecureURL
 	_, err = cs.categoryRepo.CreateData(category)
 	if err != nil {
-		return 500, errors.New("Insert to database error")
+		return 500, domain.ErrInternalServerError
 	}
 
 	return 200, nil
@@ -92,17 +92,17 @@ func (cs *CategoryService) DeleteData(ctx *gin.Context) (int, error) {
 	pageParam := ctx.Query("id")
 	id, err := strconv.Atoi(pageParam)
 	if err != nil {
-		return 422, errors.New("Invalid input ID")
+		return 422, domain.ErrFailedInputId
 	}
 
 	_, err = cs.categoryRepo.GetDataById(id)
 	if err != nil {
-		return 404, errors.New("Data not found")
+		return 404, domain.ErrNotFound
 	}
 
 	err = cs.categoryRepo.DeleteData(id)
 	if err != nil {
-		return 500, errors.New("delete to database error")
+		return 500, domain.ErrInternalServerError
 	}
 	return 200, nil
 }
@@ -110,11 +110,11 @@ func (cs *CategoryService) UpdateData(ctx *gin.Context, category *domain.UpdateC
 	pageParam := ctx.Query("id")
 	id, err := strconv.Atoi(pageParam)
 	if err != nil {
-		return 422, errors.New("Invalid input ID")
+		return 422, domain.ErrFailedInputId
 	}
 	data, err := cs.categoryRepo.GetDataById(id)
 	if err != nil {
-		return 404, errors.New("Data not found")
+		return 404, domain.ErrNotFound
 	}
 
 	file, multipartheader, _ := ctx.Request.FormFile("image")
@@ -123,7 +123,7 @@ func (cs *CategoryService) UpdateData(ctx *gin.Context, category *domain.UpdateC
 		//update with no replace image
 		err := cs.categoryRepo.UpdateData(id, category)
 		if err != nil {
-			return 500, errors.New("update to database error")
+			return 500, domain.ErrInternalServerError
 		}
 		return 200, nil
 	} else {
@@ -142,14 +142,14 @@ func (cs *CategoryService) UpdateData(ctx *gin.Context, category *domain.UpdateC
 				Folder:   "pos"})
 
 			if err != nil {
-				return 500, errors.New("Service upload image error")
+				return 500, domain.ErrInternalServerError
 			}
 
 			category.Image = resp.SecureURL
 
 			err = cs.categoryRepo.UpdateData(id, category)
 			if err != nil {
-				return 500, errors.New("update to database error")
+				return 500, domain.ErrInternalServerError
 			}
 			return 200, nil
 		}
@@ -169,14 +169,14 @@ func (cs *CategoryService) UpdateData(ctx *gin.Context, category *domain.UpdateC
 			Folder:   "pos"})
 
 		if err != nil {
-			return 500, errors.New("Service upload image error")
+			return 500, domain.ErrInternalServerError
 		}
 
 		category.Image = resp.SecureURL
 
 		err = cs.categoryRepo.UpdateData(id, category)
 		if err != nil {
-			return 500, errors.New("update to database error")
+			return 500, domain.ErrInternalServerError
 		}
 		return 200, nil
 

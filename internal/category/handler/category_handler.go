@@ -8,10 +8,6 @@ import (
 	"github.com/gin-gonic/gin"
 )
 
-type ResponseError struct {
-	Message string `json:"message"`
-}
-
 type CategoryHandler struct {
 	categoryservice domain.CategoryService
 }
@@ -42,7 +38,7 @@ func (c *CategoryHandler) GetData(ctx *gin.Context) {
 
 	data, err := c.categoryservice.GetData(page)
 	if err != nil {
-		ctx.JSON(500, ResponseError{Message: err.Error()})
+		ctx.JSON(500, domain.ResponseError{Message: err.Error()})
 		return
 
 	}
@@ -55,13 +51,13 @@ func (c *CategoryHandler) GetDataById(ctx *gin.Context) {
 	idstring := ctx.Param("id")
 	id, err := strconv.Atoi(idstring)
 	if err != nil {
-		ctx.JSON(422, ResponseError{Message: "id musk integer"})
+		ctx.JSON(422, domain.ResponseError{Message: "id musk integer"})
 		return
 	}
 
 	data, err := c.categoryservice.GetDataById(id)
 	if err != nil {
-		ctx.JSON(404, ResponseError{Message: err.Error()})
+		ctx.JSON(404, domain.ResponseError{Message: err.Error()})
 		return
 
 	}
@@ -83,7 +79,7 @@ func (c *CategoryHandler) CreateData(ctx *gin.Context) {
 	}
 	resp, err := c.categoryservice.CreateData(ctx, &category)
 	if err != nil {
-		ctx.JSON(resp, ResponseError{Message: err.Error()})
+		ctx.JSON(resp, domain.ResponseError{Message: err.Error()})
 		return
 	}
 
@@ -96,7 +92,7 @@ func (c *CategoryHandler) CreateData(ctx *gin.Context) {
 func (c *CategoryHandler) DeleteData(ctx *gin.Context) {
 	resp, err := c.categoryservice.DeleteData(ctx)
 	if err != nil {
-		ctx.JSON(resp, ResponseError{Message: err.Error()})
+		ctx.JSON(resp, domain.ResponseError{Message: err.Error()})
 		return
 	}
 
@@ -119,7 +115,7 @@ func (c *CategoryHandler) UpdateData(ctx *gin.Context) {
 
 	resp, err := c.categoryservice.UpdateData(ctx, &category)
 	if err != nil {
-		ctx.JSON(resp, ResponseError{Message: err.Error()})
+		ctx.JSON(resp, domain.ResponseError{Message: err.Error()})
 		return
 	}
 	ctx.JSON(resp, gin.H{

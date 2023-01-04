@@ -12,6 +12,10 @@ import (
 	"clean-arsitecture/internal/database"
 	"fmt"
 
+	_menuHadler "clean-arsitecture/internal/menu/handler"
+	_menuRepo "clean-arsitecture/internal/menu/repository"
+	_menuService "clean-arsitecture/internal/menu/service"
+
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
 )
@@ -37,10 +41,13 @@ func main() {
 	categoryRepo := _categoryRepo.NewCategoryRepository(db)
 	categoryService := _categoryService.NewCategoryService(categoryRepo)
 
+	menuRepo := _menuRepo.NewMenuRepository(db)
+	menuService := _menuService.NewMenuService(menuRepo)
 	authorized := r.Group("")
 	authorized.Use(middleware)
 	{
 		_categoryHadler.NewCategoryHandler(authorized, categoryService)
+		_menuHadler.NewMenuHandler(authorized, menuService)
 	}
 
 	r.Run()

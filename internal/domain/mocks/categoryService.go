@@ -47,3 +47,14 @@ func (_m *CategoryServiceMock) TotalData() (int64, error) {
 
 	}
 }
+
+func (m *CategoryServiceMock) CreateData(category *domain.MCategory) (*domain.MCategory, error) {
+	return &domain.MCategory{}, nil
+}
+func (m *CategoryServiceMock) DeleteData(id int) error {
+	return nil
+
+}
+func (m *CategoryServiceMock) UpdateData(id int, category *domain.UpdateCategory) error {
+	return nil
+}
