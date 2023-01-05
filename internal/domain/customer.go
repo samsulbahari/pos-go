@@ -9,10 +9,10 @@ import (
 
 type MCustomer struct {
 	ID        int
-	Name      string `json:"name"`
-	Address   string `json:"address"`
-	Email     string `json:"email"`
-	Phone     string `json:"phone"`
+	Name      string `json:"name" binding:"required,min=2"`
+	Address   string `json:"address" binding:"required"`
+	Email     string `json:"email" binding:"required,email"`
+	Phone     string `json:"phone" binding:"required,max=13"`
 	Status    string `json:"status"`
 	UpdatedAt time.Time
 	CreatedAt time.Time
@@ -38,7 +38,7 @@ type CustomerRepository interface {
 
 type CustomerService interface {
 	GetData(ctx *gin.Context) (ResultCustomer, error)
-	// GetDataById(id int) (MCategory, error)
+	GetDataById(ctx *gin.Context) (int, MCustomer, error)
 	// CreateData(ctx *gin.Context, category *MCategory) (int, error)
 	// DeleteData(ctx *gin.Context) (int, error)
 	// UpdateData(ctx *gin.Context, category *UpdateCategory) (int, error)

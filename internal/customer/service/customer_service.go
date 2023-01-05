@@ -50,3 +50,17 @@ func (cs *CustomerService) GetData(ctx *gin.Context) (domain.ResultCustomer, err
 
 	return Result, nil
 }
+func (cs *CustomerService) GetDataById(ctx *gin.Context) (int, domain.MCustomer, error) {
+	idstring := ctx.Param("id")
+	id, err := strconv.Atoi(idstring)
+	if err != nil {
+
+		return 422, domain.MCustomer{}, domain.ErrFailedInputId
+	}
+
+	res, err := cs.custemerRepo.GetDataById(id)
+	if err != nil {
+		return 404, domain.MCustomer{}, domain.ErrNotFound
+	}
+	return 200, res, nil
+}
