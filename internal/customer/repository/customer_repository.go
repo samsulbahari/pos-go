@@ -27,6 +27,12 @@ func (m *CustomerRepository) GetDataById(id int) (domain.MCustomer, error) {
 	return customer, err
 }
 
+func (m *CustomerRepository) GetDataByEmail(email string) (domain.MCustomer, error) {
+	var customer domain.MCustomer
+	err := m.db.Where("email = ?", email).First(&customer).Error
+	return customer, err
+}
+
 func (m *CustomerRepository) TotalData() (int64, error) {
 	var count int64
 	var customer []domain.MCustomer

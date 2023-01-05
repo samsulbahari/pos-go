@@ -28,6 +28,7 @@ type ResultCustomer struct {
 }
 
 type CustomerRepository interface {
+	GetDataByEmail(email string) (MCustomer, error)
 	GetData(page int) ([]MCustomer, error)
 	GetDataById(id int) (MCustomer, error)
 	TotalData() (int64, error)
@@ -39,7 +40,7 @@ type CustomerRepository interface {
 type CustomerService interface {
 	GetData(ctx *gin.Context) (ResultCustomer, error)
 	GetDataById(ctx *gin.Context) (int, MCustomer, error)
-	// CreateData(ctx *gin.Context, category *MCategory) (int, error)
+	CreateData(ctx *gin.Context, custemerRepo *MCustomer) (int, error)
 	// DeleteData(ctx *gin.Context) (int, error)
 	// UpdateData(ctx *gin.Context, category *UpdateCategory) (int, error)
 }

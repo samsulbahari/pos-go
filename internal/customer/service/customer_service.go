@@ -2,6 +2,7 @@ package service
 
 import (
 	"clean-arsitecture/internal/domain"
+	"errors"
 	"math"
 	"strconv"
 
@@ -63,4 +64,19 @@ func (cs *CustomerService) GetDataById(ctx *gin.Context) (int, domain.MCustomer,
 		return 404, domain.MCustomer{}, domain.ErrNotFound
 	}
 	return 200, res, nil
+}
+
+func (cs *CustomerService) CreateData(ctx *gin.Context, custemerRepo *domain.MCustomer) (int, error) {
+	_, err := cs.custemerRepo.GetDataByEmail(custemerRepo.Email)
+
+	if err == nil {
+		return 422, errors.New("email musk unique")
+	}
+
+	_, err = cs.custemerRepo.CreateData(custemerRepo)
+	if err != nil {
+		return 500, domain.ErrInternalServerError
+	}
+
+	return 200, nil
 }
