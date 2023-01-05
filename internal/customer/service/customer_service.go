@@ -80,3 +80,22 @@ func (cs *CustomerService) CreateData(ctx *gin.Context, custemerRepo *domain.MCu
 
 	return 200, nil
 }
+
+func (cs *CustomerService) DeleteData(ctx *gin.Context) (int, error) {
+	pageParam := ctx.Query("id")
+	id, err := strconv.Atoi(pageParam)
+	if err != nil {
+		return 422, domain.ErrFailedInputId
+	}
+
+	_, err = cs.custemerRepo.GetDataById(id)
+	if err != nil {
+		return 404, domain.ErrNotFound
+	}
+
+	err = cs.custemerRepo.DeleteData(id)
+	if err != nil {
+		return 500, domain.ErrInternalServerError
+	}
+	return 200, nil
+}

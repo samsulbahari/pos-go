@@ -16,6 +16,7 @@ func NewCustomerHandler(r *gin.RouterGroup, cs domain.CustomerService) {
 	r.GET("customer", handler.GetData)
 	r.GET("customer/:id", handler.GetDataById)
 	r.POST("customer", handler.CreateData)
+	r.DELETE("customer", handler.DeleteData)
 }
 
 func (ch *CustomerHandler) GetData(ctx *gin.Context) {
@@ -71,4 +72,15 @@ func (c *CustomerHandler) CreateData(ctx *gin.Context) {
 		"message": "success insert data",
 	})
 
+}
+
+func (c *CustomerHandler) DeleteData(ctx *gin.Context) {
+	resp, err := c.customerService.DeleteData(ctx)
+	if err != nil {
+		ctx.JSON(resp, domain.ResponseError{Message: err.Error()})
+		return
+	}
+	ctx.JSON(resp, gin.H{
+		"message": "success delete data",
+	})
 }

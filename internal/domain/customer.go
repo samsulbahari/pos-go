@@ -41,6 +41,6 @@ type CustomerService interface {
 	GetData(ctx *gin.Context) (ResultCustomer, error)
 	GetDataById(ctx *gin.Context) (int, MCustomer, error)
 	CreateData(ctx *gin.Context, custemerRepo *MCustomer) (int, error)
-	// DeleteData(ctx *gin.Context) (int, error)
+	DeleteData(ctx *gin.Context) (int, error)
 	// UpdateData(ctx *gin.Context, category *UpdateCategory) (int, error)
 }
