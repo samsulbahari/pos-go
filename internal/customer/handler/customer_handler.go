@@ -17,6 +17,7 @@ func NewCustomerHandler(r *gin.RouterGroup, cs domain.CustomerService) {
 	r.GET("customer/:id", handler.GetDataById)
 	r.POST("customer", handler.CreateData)
 	r.DELETE("customer", handler.DeleteData)
+	r.PUT("customer", handler.UpdateData)
 }
 
 func (ch *CustomerHandler) GetData(ctx *gin.Context) {
@@ -82,5 +83,27 @@ func (c *CustomerHandler) DeleteData(ctx *gin.Context) {
 	}
 	ctx.JSON(resp, gin.H{
 		"message": "success delete data",
+	})
+}
+
+func (c *CustomerHandler) UpdateData(ctx *gin.Context) {
+	var customer domain.UpdateCustomer
+
+	err := ctx.ShouldBind(&customer)
+	if err != nil {
+		validation_response := libraries.Validation(err)
+		ctx.JSON(422, gin.H{
+			"message": validation_response,
+		})
+		return
+	}
+
+	resp, err := c.customerService.UpdateData(ctx, &customer)
+	if err != nil {
+		ctx.JSON(resp, domain.ResponseError{Message: err.Error()})
+		return
+	}
+	ctx.JSON(resp, gin.H{
+		"message": "success update data",
 	})
 }

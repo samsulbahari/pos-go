@@ -19,6 +19,18 @@ type MCustomer struct {
 	DeletedAt gorm.DeletedAt `json:"-"`
 }
 
+type UpdateCustomer struct {
+	ID        int
+	Name      string `json:"name" binding:"min=2"`
+	Address   string `json:"address"`
+	Email     string `json:"email" binding:"email"`
+	Phone     string `json:"phone" binding:"max=13"`
+	Status    string `json:"status"`
+	UpdatedAt time.Time
+	CreatedAt time.Time
+	DeletedAt gorm.DeletedAt `json:"-"`
+}
+
 type ResultCustomer struct {
 	Total    int
 	PerPage  int
@@ -34,7 +46,7 @@ type CustomerRepository interface {
 	TotalData() (int64, error)
 	CreateData(category *MCustomer) (*MCustomer, error)
 	DeleteData(id int) error
-	//UpdateData(id int, category *UpdateCategory) error
+	UpdateData(id int, customer *UpdateCustomer) error
 }
 
 type CustomerService interface {
@@ -42,5 +54,5 @@ type CustomerService interface {
 	GetDataById(ctx *gin.Context) (int, MCustomer, error)
 	CreateData(ctx *gin.Context, custemerRepo *MCustomer) (int, error)
 	DeleteData(ctx *gin.Context) (int, error)
-	// UpdateData(ctx *gin.Context, category *UpdateCategory) (int, error)
+	UpdateData(ctx *gin.Context, customer *UpdateCustomer) (int, error)
 }

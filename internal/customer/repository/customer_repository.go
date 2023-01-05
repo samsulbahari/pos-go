@@ -50,7 +50,7 @@ func (m *CustomerRepository) DeleteData(id int) error {
 	return err
 }
 
-// func (m *CustomerRepository) UpdateData(id int, customer *domain.Updatecustomer) error {
-// 	err := m.db.Table("m_customer").Where("id = ?", id).Updates(customer).Error
-// 	return err
-// }
+func (m *CustomerRepository) UpdateData(id int, customer *domain.UpdateCustomer) error {
+	err := m.db.Table("m_customer").Where("id = ?", id).Updates(customer).Error
+	return err
+}

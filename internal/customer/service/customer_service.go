@@ -99,3 +99,28 @@ func (cs *CustomerService) DeleteData(ctx *gin.Context) (int, error) {
 	}
 	return 200, nil
 }
+func (cs *CustomerService) UpdateData(ctx *gin.Context, customer *domain.UpdateCustomer) (int, error) {
+	pageParam := ctx.Query("id")
+	id, err := strconv.Atoi(pageParam)
+	if err != nil {
+		return 422, domain.ErrFailedInputId
+	}
+	data, err := cs.custemerRepo.GetDataById(id)
+	if err != nil {
+		return 404, domain.ErrNotFound
+	}
+	if data.Email == customer.Email {
+		err = cs.custemerRepo.UpdateData(id, customer)
+		if err != nil {
+			return 500, domain.ErrInternalServerError
+		}
+		return 200, nil
+	}
+	_, err = cs.custemerRepo.GetDataByEmail(data.Email)
+	if err == nil {
+		return 422, errors.New("email musk unique")
+	}
+
+	return 200, nil
+
+}
